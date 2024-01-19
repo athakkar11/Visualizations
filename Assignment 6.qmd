@@ -1,0 +1,56 @@
+# Assignment 6
+```{r}
+
+library(ggplot2)
+library(dplyr)
+
+data("statepop")
+
+statepop$region <- tolower(statepop$full)
+
+states_map <- map_data("state")
+
+population_map <- merge(states_map, statepop, by.x = "region", by.y = "region")
+
+gg <- ggplot(population_map, aes(x = long, y = lat, group = group, fill = pop_2015)) +
+  geom_polygon(color = "white") +
+  scale_fill_distiller(palette = "Viridis", name = "Population", labels = scales::comma) +
+  labs(title = "US State Populations",
+       subtitle = "Data source: 'statepop' from the 'usmap' library",
+       caption = "Map created using ggplot2") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+gg + theme(legend.key.width = unit(3, "in"))
+
+```
+```{r}
+library(plotly)
+plot1 <- marketing_campaign %>%
+  group_by(Education) %>%
+  summarise(count = n()) %>%
+  plot_ly(x = ~Education, y = ~count, type = "bar", name = "Education Levels")
+
+plot2 <- marketing_campaign %>%
+  plot_ly(x = ~Year_Birth, y = ~Income, type = "scatter", mode = "markers", color = ~Year_Birth, size = ~Income,
+          marker = list(size = 10, opacity = 0.7, colorscale = "Viridis"), ids = ~Year_Birth)
+
+subplot(plot1, plot2, nrows = 2)
+```
+
+```{r}
+animated_plot <- marketing_campaign %>%
+  plot_ly(x = ~Year_Birth, y = ~Income, type = "scatter", mode = "lines+markers",
+          line = list(simplify = FALSE), ids = ~Year_Birth,
+          animation_frame = ~Year_Birth, animation_group = ~Year_Birth)
+
+animated_plot <- animated_plot %>%
+  layout(title = "Income Over Time",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Income"),
+         showlegend = FALSE)
+
+animated_plot
+
+```
+

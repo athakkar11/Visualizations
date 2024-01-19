@@ -1,0 +1,106 @@
+---
+title: "Assignment 5"
+format: html
+editor: visual
+---
+
+```{r}
+siva = read.csv("C:/Users/Akshata/Downloads/siva.csv")
+siva
+
+str(siva)
+
+install.packages("corrplot")
+install.packages("datarium")
+library(corrplot)
+library(ggplot2)
+library(dplyr)
+library(datarium)
+
+
+siva_sub <- siva[,c(9:14)]
+head(siva_sub)
+tail(siva_sub)
+ 
+
+
+siva_sub_new <- na.omit(siva_sub)
+head(siva_sub_new)
+tail(siva_sub_new)
+
+str(siva_sub_new)
+
+ 
+siva_cor <- cor(siva_sub_new)
+corrplot(siva_cor)
+
+
+
+## Set corrplot parameters
+
+col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA" ))
+
+corrplot(siva_cor,
+         method = "color",
+         col = col(200),
+         type = "lower",
+         order = "hclust",
+         addCoef.col = "black",
+         tl.col = "black",
+         tl.srt = 45,
+         diag = F)
+
+
+```
+
+# Regression models
+
+```{r}
+siva_model <- lm(Recom_mend_Siva ~ Staff_Courtesy + Speed_of_Service + Veh_Equip_Condition, data = siva)
+summary(siva_model)
+
+```
+
+# Predicted line with y = Recom_mend_Siva
+
+```{r}
+ggplot(siva, aes(x=Staff_Courtesy, y=Recom_mend_Siva)) + 
+  geom_point()+
+  geom_smooth(method="lm")
+
+ggplot(siva, aes(x=Speed_of_Service, y=Recom_mend_Siva)) + 
+  geom_point()+
+  geom_smooth(method="lm")
+
+ggplot(siva, aes(x=Veh_Equip_Condition, y=Recom_mend_Siva)) + 
+  geom_point()+
+  geom_smooth(method="lm")
+```
+
+##Clustering
+
+```{r}
+library(ggpubr)
+library(factoextra)
+
+siva_sub1 <- siva[,c(9:12)]
+
+head(siva_sub1)
+tail(siva_sub1)
+ 
+siva_sub_new1 <- na.omit(siva_sub1)
+head(siva_sub_new1)
+tail(siva_sub_new1)
+
+
+(kmeans.result1 <- kmeans(siva_sub_new1[,-1], 4))
+
+ 
+fviz_cluster(kmeans.result1, data = siva_sub_new1[,-1],
+             palette = c("#2E9FDF", "#00AFBB", "#E7B800", "purple"), 
+             geom = "point",
+             ellipse.type = "convex", 
+             ggtheme = theme_bw()
+)
+
+```

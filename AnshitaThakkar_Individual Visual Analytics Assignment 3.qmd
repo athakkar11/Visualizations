@@ -1,0 +1,291 @@
+---
+title: "Assignment 3 Individual Assignment"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+SUBMIT BOTH PDF AND R FILE
+
+```{r}
+marketing <- read.csv("/Users/anshitathakkar/Documents/Visual analytics/Week 5/marketing_campaign.csv", sep = ",", header = T)
+marketing
+```
+
+```{r}
+str(marketing)
+```
+#One interesting observation is that there are mainly numberic variables. As all of the "Accepted variables", "Complain" and "Response Variables" have only 0 ans 1 values, there can be classified as both quantitative and categorical. 
+```{r}
+is(marketing)
+```
+
+# 1 Univariate non-graphical EDA: categorical data
+```{r}
+#variable: Marital Status 
+MTable <- table(marketing$Marital_Status) #one variable: Marital Status
+MTable
+summary(MTable)
+```
+#This shows us that most people in our dataset are married (n = 857)
+
+```{r}
+#Variable: Education
+ETable <- table(marketing$Education) #one variable: education
+ETable
+summary(ETable)
+```
+#this shows us that most people in the dataset have graduated with a Bachelor's degree.
+
+```{r}
+#Variable: Complain
+CTable <- table(marketing$Complain) #one variable: Complain
+CTable
+summary(CTable)
+```
+#this shows us that the number of people who complainted out of 2216 is 21.
+
+```{r}
+prop.table(MTable)
+prop.table(ETable)
+prop.table(CTable)
+```
+#The observations summarized above are also reflected in the prop tables
+
+-----------
+
+# 2 Univariate non-graphical EDA: quantitative data
+
+```{r}
+#variable: Income
+summary(marketing$Income)
+library(psych)
+```
+
+```{r}
+ describe(marketing$Income)
+```
+
+```{r}
+#variable: Amount spent on wine
+summary(marketing$MntWines)
+
+```
+
+```{r}
+describe(marketing$MntWines)
+```
+
+------------
+
+```{r}
+## Univariate graphical EDA: categorical data: histogram
+library(ggplot2)
+ggplot(marketing, aes(x = factor(Education))) +
+  geom_bar() + labs(title = "Bar Chart of Education Levels") # Most basic bar chart
+```
+
+```{r}
+library(ggplot2)
+ggplot(marketing, aes(x = factor(Marital_Status))) +
+  geom_bar() + labs(title = "Bar Chart of Marital Status") 
+```
+
+```{r}
+library(ggplot2)
+ggplot(marketing, aes(x = factor(Complain))) +
+  geom_bar() + labs(title = "Bar Chart of Customer Complaints") 
+```
+
+
+
+
+
+
+
+
+```{r}
+# Load the necessary library
+library(readr)
+
+
+# Filter the data to include only rows where 'Income' is equal to 666,666
+filtered_Marketing <- marketing[marketing$Income == 666666, ]
+
+# Now, you can perform your desired analysis on the filtered data
+# For example, you can print the filtered data to see the rows with Income = 666666
+print(filtered_Marketing)
+
+# You can also perform any exploratory data analysis or visualization on the filtered data as needed.
+
+```
+
+
+```{r}
+## Univariate graphical EDA: quantitative data: histogram
+
+# Create a boxplot for the 'Income' variable
+ggplot(marketing, aes(y = Income)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Income")
+```
+#An interesting observation is that most people's income is under $100,000. The outlier income of 666,666 is reflected by the single dot at the top of the graph. 
+
+```{r}
+# Create a boxplot for the 'Income' variable
+ggplot(marketing, aes(y = MntWines)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Amount Spent on Wines")
+```
+
+#The average amoutn spent on wine is around $300 while most people do not spend more than $500 on wine. Some people have spend over $1,250 to $1,500 on wines - these outliers are reflected as dots in the Box Plot. 
+
+---------
+
+#3 Multivariate non-graphical EDA: cross-tabulation for categorical variables 
+
+```{r}
+table(marketing$Education, marketing$Marital_Status)
+```
+
+
+```{r}
+View(marketing)
+```
+
+```{r}
+# Cross-tabulation for 'Education' and 'Complain' variables
+table(marketing$Education, marketing$Complain)
+
+```
+
+```{r}
+# Cross-tabulation for 'Kidhome' and 'Education' variables
+table(marketing$Kidhome, marketing$Education)
+```
+#This is interesting in highlighting where there is a possible link between education level and the number of children one has - it might be interesting to explore based on this cross tab further where there is a relationship between education and the number of children. People who have graduated with a bachelors have more children that people with a masters, PHD or other levels of education. It would be interesting toe explore this relationship further. 
+
+#4 Multivariate non-graphical EDA: Covariance and correlation for two quantitative variables
+```{r}
+## Multivariate non-graphical EDA: Covariance and correlation for two quantitative variables
+print(cov(marketing$Income, marketing$NumWebVisitsMonth)) 
+print(cor(marketing$Income, marketing$NumWebVisitsMonth)) 
+
+print(cov(marketing$Income, marketing$NumStorePurchases))
+print(cor(marketing$Income, marketing$NumStorePurchases)) 
+
+print(cov(marketing$MntWines, marketing$NumStorePurchases))
+print(cor(marketing$MntWines, marketing$NumStorePurchases)) 
+```
+#Based on the above three variables, the amount spent on wines and number of store purchases has the strongest correlation compared to the other quantitative variable pairs (income and number of web visits AND income and number of store purchases)
+
+#QUANTITATIVE VARIABLES: marketing$Income, marketing$NumWebVisitsMonth, marketing$Recency, marketing$MntWines, marketing$MntFruits, marketing$MntMeatProducts, marketing$MntFishProducts, marketing$MntSweetProducts, marketing$MntGoldProds, marketing$NumDealsPurchases, marketing$NumWebPurchases, marketing$NumCatalogPurchases, marketing$NumStorePurchases, marketing$NumWebVisitsMonth)) 
+
+
+
+```{r}
+## Multivariate non-graphical EDA: Covariance and correlation for more than two quantitative variables - I have choses all numeric variables in the marketing dataset.
+
+cov_matrix <- cov(marketing[, sapply(marketing, is.numeric)])
+print(cov_matrix)
+
+```
+
+```{r}
+cor_matrix <- cor(marketing[, sapply(marketing, is.numeric)])
+print(cor_matrix)
+```
+# It is interesting to observe here that none of the variables are strongly correlated. By looking through the results, it seems that the strongest correlation is between the amount spent on wine and number of store purchases at 0.6400119079. 
+
+```{r}
+## Multivariate graphical EDA: bar plots for categorical variables
+data(marketing)
+
+# Simple Bar Plot for one categorical variable
+counts <- table(marketing$Education)
+barplot(counts, main="Bar Plot of Education Level",
+        xlab="Level of Education")
+
+counts <- table(marketing$Marital_Status)
+barplot(counts, main="Bar Plot of Marital Status",
+        xlab="Marital Status")
+```
+
+
+```{r}
+# Stacked Bar Plot for two categorical variables
+counts <- table(marketing$Marital_Status, marketing$Education)
+barplot(counts, main="Education and Marital Status",
+        xlab="Education", col=c("darkblue","red", "lightgreen", "lightblue", "maroon", "grey", "pink", "brown"),
+        legend = rownames(counts))
+```
+
+```{r}
+# Grouped Bar Plot for two categorical variables
+counts <- table(marketing$Marital_Status, marketing$Education)
+barplot(counts, main="Education and Marital Status",
+        xlab="Education", col=c("darkblue","red", "lightgreen", "lightblue", "maroon", "grey", "pink", "brown"),
+        legend = rownames(counts), beside=TRUE)
+```
+
+
+
+```{r}
+## Multivariate graphical EDA: quantitative variables
+
+#scatter plot of two quantitative variables
+
+plot(marketing$Income, marketing$MntWines,
+     xlab = "Income",
+     ylab = "Amount Spent on Wines",
+     main = "Correlation between income and Wine Spending")
+```
+```{r}
+cor(marketing$Income, marketing$MntWines)
+```
+
+#Both the graph and correlation tab show a moderate positive relationship between income amount and amount spent on wines (cor = 0.5786498)
+
+```{r}
+# Box plot by group
+boxplot(marketing$MntWines ~ marketing$NumStorePurchases)
+```
+#people who purchase in stores are on average more likely to spend more on wine
+
+```{r}
+cor(marketing$MntWines, marketing$NumStorePurchases)
+```
+
+
+```{r}
+boxplot(marketing$NumWebPurchases ~ marketing$NumDealsPurchases)
+```
+```{r}
+cor(marketing$NumWebPurchases, marketing$NumDealsPurchases)
+```
+
+
+#There does not appear to be a strong correlation between deal purchases and web purchases 
+
+

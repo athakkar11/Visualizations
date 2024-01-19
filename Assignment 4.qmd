@@ -1,0 +1,115 @@
+# MAR657: Visual Analytics
+# Individual Assignment 4: Data Manipulation, Filtering, and Visualizations
+
+```{r}
+siva <- read.csv('/Users/shafoo/Downloads/siva.csv')
+siva
+```
+```{r}
+head(siva)
+```
+# filter (1)
+```{r}
+library(dplyr)
+siva %>% filter(Staff_Courtesy >= 7) %>% head(10)
+```
+
+# group_by & summarize (2-3)
+```{r}
+siva %>% 
+  group_by(Date_of_Survey) %>% 
+  summarise(avg_Recom_mend = mean(Recom_mend_Siva)) %>% 
+  head(10)
+```
+
+# ifelse (4)
+```{r}
+siva$speed_category <- ifelse(siva$Speed_of_Service > 5, "Fast", "Slow")
+siva %>% head(10)
+```
+
+# select (5)
+```{r}
+siva %>% select(Day_of_Week, Time) %>% head(10)
+```
+# bar plot (1)
+```{r}
+ggplot(data = siva, aes(x = Purpose_of_Rental)) + geom_bar(fill = "gold")
+```
+
+# density plot (2)
+```{r}
+ggplot(siva, aes(x = Recom_mend_Siva)) +
+  geom_density(fill = "pink")
+```
+
+#horizontal bar plot (3)
+```{r}
+ggplot(data = siva, aes(x = Purpose_of_Rental)) + geom_bar(fill = "purple") + coord_flip()
+```
+
+# box plot (4)
+```{r}
+library(ggplot2)
+
+ggplot(siva, aes(x = Purpose_of_Rental, y = Value_for_the_Money)) +
+  geom_boxplot(outlier.color = "red", outlier.shape = 8, outlier.size = 4) +
+  labs(title = "Box Plot of Value for the Money by Purpose of Rental",
+       x = "Purpose of Rental",
+       y = "Value for the Money")
+```
+
+# histogram (5)
+```{r}
+library(ggplot2)
+qplot(siva$Speed_of_Service, fill = "blue")
+```
+
+# install rmarkdown to save visualizations as PDF
+```{r}
+install.packages('rmarkdown')
+library(rmarkdown)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
